@@ -1,0 +1,110 @@
+﻿@using FA.LibraryManagement.Common.ViewModels;
+@using X.PagedList;
+@using X.PagedList.Mvc.Core
+@model IPagedList<BookVM>
+
+@{
+    ViewData["Title"] = "Library";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/lib/toastify-js/src/toastify.css" />
+}
+<!-- Blog Start -->
+<div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
+    <div class="container py-5">
+        <div class="row g-5">
+            <!-- Blog list Start -->
+            <div class="col-lg-8">
+                <div class="row g-5">
+                    @foreach (var item in Model)
+                    {
+                        <div class="col-md-6 wow slideInUp" data-wow-delay="0.1s">
+                            <div class="blog-item bg-light rounded overflow-hidden">
+                                <div class="blog-img position-relative overflow-hidden">
+                                    <img class="img-fluid" src="@item.BookImages.FirstOrDefault()?.ImageUrl" alt="@item.Title">
+                                </div>
+                                <div class="p-4">
+                                    <div class="d-flex mb-3">
+                                        <small class="me-3"><i class="far fa-user text-primary me-2"></i>@item.AuthorNames?.FirstOrDefault()</small>
+                                        <small><i class="far fa-calendar-alt text-primary me-2"></i>@item.PublishedDate.ToString("dd/MM/yyyy")</small>
+
+                                    </div>
+                                    <h4 class="mb-3">@item.Title</h4>
+                                    <a class="text-uppercase" asp-controller="Book" asp-action="Detail" asp-area="Member" asp-route-bookId="@item.Id">Details<i class="bi bi-arrow-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    
+
+                    <div class="col-12 wow slideInUp" data-wow-delay="0.1s">
+                        <nav aria-label="Page navigation">
+                            
+                                @Html.PagedListPager(Model, page => Url.Action("Index", "Home", new { area = "Member", page, keyword = ViewData["keyword"] }), new PagedListRenderOptions
+                           {
+                           LiElementClasses = new[] { "page-item" },
+                           PageClasses = new[] { "page-link" },
+                           UlElementClasses = new[] { "pagination pagination-lg m-0" },
+                           ActiveLiElementClass = "active",
+                           DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+                           DisplayLinkToLastPage = PagedListDisplayMode.Always,
+                           DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                           DisplayLinkToNextPage = PagedListDisplayMode.Always,
+                           DisplayLinkToIndividualPages = true,
+                           DisplayEllipsesWhenNotShowingAllPageNumbers = true,
+                           EllipsesFormat = "...",
+                           MaximumPageNumbersToDisplay = 5,                                                                           
+                           });                            
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <!-- Blog list End -->
+            <!-- Sidebar Start -->
+            <div class="col-lg-4">
+                <!-- Search Form Start -->
+                <form method="get" asp-controller="Home" asp-action="Index" asp-area="Member">
+                    <div class="mb-5 wow slideInUp" data-wow-delay="0.1s">
+                        <div class="input-group">
+                            <input type="text" name="keyword" value="@ViewData["keyword"]" class="form-control p-3" placeholder="Search something.....">
+                            <button type="submit" class="btn btn-primary px-4"><i class="bi bi-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+                <!-- Search Form End -->
+                <!-- Category Start -->
+                <div class="mb-5 wow slideInUp" data-wow-delay="0.1s">
+                    <div class="section-title section-title-sm position-relative pb-3 mb-4">
+                        <h3 class="mb-0">Categories</h3>
+                    </div>
+                    <div class="link-animated d-flex flex-column justify-content-start">
+                        @await Component.InvokeAsync("CategoryList")
+                    </div>
+                </div>
+                <!-- Category End -->
+            </div>
+
+        </div>
+    </div>
+    @if (!string.IsNullOrEmpty(ViewBag.Message))
+    {
+        <script src="~/lib/toastify-js/src/toastify.js"></script>
+        <script>
+
+            Toastify({
+                text: "@ViewBag.Message",
+                duration: 3000,
+                gravity: "top",
+                position: 'right',
+                backgroundColor: "#00c851",
+                stopOnFocus: true,
+                style: {
+
+                }
+            }).showToast();
+        </script>
+    }
+</div>
+

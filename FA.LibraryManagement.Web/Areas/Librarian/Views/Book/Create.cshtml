@@ -1,0 +1,152 @@
+﻿@model FA.LibraryManagement.Common.ViewModels.BookVM;
+
+@{
+    ViewData["Title"] = "Create Book";
+    ViewData["HeadingTitle"] = "Create Book";
+    ViewData["CM"] = "active";
+    ViewData["book"] = "active";
+}
+
+@section Styles
+{
+    <link rel="stylesheet" crossorigin href="~/lib/select2-4.0.13/dist/css/select2.min.css">
+    <link rel="stylesheet" crossorigin href="~/lib/select2-4.0.13/dist/css/select2-bootstrap-5-theme.min.css">
+    <link rel="stylesheet" href="~/lib/flatpickr/flatpickr.min.css">
+    <!-- pintura -->
+    <link rel="stylesheet" href="~/lib/pqina/pintura/pintura.css"/>
+    <!-- filepond -->
+    <link href="~/lib/filepond/filepond.css" rel="stylesheet" type="text/css"/>
+    <link href="~/lib/filepond-plugin-file-poster/dist/filepond-plugin-file-poster.css" rel="stylesheet" type="text/css"/>
+}
+
+<div class="card">
+    <div class="card-body">
+        <form id="book-form" asp-controller="Book" asp-action="Create" method="post" class="row" enctype="multipart/form-data">
+            <div class="col-12">
+                <input asp-for="Id" hidden="hidden">
+                <input asp-for="IdDb" hidden="hidden">
+                <div class="">
+                    <div class="form-group ">
+                        <label class="text-xl fw-bold" asp-for="Title">Title</label>
+                        <div class="position-relative">
+                            <input asp-for="Title" type="text" class="form-control form-control-xl" placeholder="Title">
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <div class="form-group ">
+                        <label class="text-xl fw-bold" asp-for="PublishedDate">Published Date</label>
+                        <div class="position-relative">
+                            <input asp-for="PublishedDate" type="date" class="form-control form-control-xl flatpickr-no-config" placeholder="Title">
+                            <span asp-validation-for="PublishedDate" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <div class="form-group ">
+                        <label class="text-xl fw-bold" for="first-name-icon">Description</label>
+                        <div class="position-relative">
+                            <input asp-for="Description" type="text" aria-required="true" class="form-control form-control-xl" placeholder="Description">
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <div class="form-group ">
+                        <label class="text-xl fw-bold" asp-for="ISBN">ISBN</label>
+                        <div class="position-relative">
+                            <input asp-for="ISBN" type="text" aria-required="true" class="form-control form-control-xl" placeholder="ISBN">
+                            <span asp-validation-for="ISBN" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <div class="form-group ">
+                        <label class="text-xl fw-bold" asp-for="BookAuthors">Author</label>
+                        <div class="position-relative">
+                            <select asp-items="Model.AuthorSelectListItems" asp-for="Authors" class="form-control form-control-xl" placeholder="Authors" multiple="multiple"></select>
+                            <span asp-validation-for="Authors" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <div class="form-group ">
+                        <label class="text-xl fw-bold" asp-for="Quantity">Quantity</label>
+                        <div class="position-relative">
+                            <input asp-for="Quantity" type="text" aria-required="true" class="form-control form-control-xl" placeholder="Quantity">
+                            <span asp-validation-for="Quantity" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <div class="form-group ">
+                        <label class="text-xl fw-bold" asp-for="Publisher">Publisher</label>
+                        <div class="position-relative">
+                            <input asp-for="Publisher" type="text" aria-required="true" class="form-control form-control-xl" placeholder="Publisher">
+                            <span asp-validation-for="Publisher" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <div class="form-group ">
+                        <label class="text-xl fw-bold" asp-for="Quantity">Category</label>
+                        <div class="position-relative">
+                            <select asp-items="Model.CategorieSelectListItems" asp-for="CategoryId" class="form-control form-control-xl"></select>
+                            <span asp-validation-for="Quantity" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <div class="form-group ">
+                        <label class="text-xl fw-bold" for="Images">Images</label>
+                        <div class="position-relative">
+                            <input id="image-pond" name="files" type="file" multiple="multiple"/>
+                        </div>
+                    </div>
+                </div>
+                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            </div>
+            <div class="col-12 d-flex justify-content-start">
+                <button type="submit" class="btn btn-primary me-1 mb-1 col-3">Create</button>
+                <button type="reset" class="btn btn-secondary me-1 mb-1 col-3">Reset</button>
+            </div>
+        </form>
+    </div>
+</div>
+@if (!string.IsNullOrEmpty(ViewBag.Message))
+{
+    <script src="~/lib/toastify-js/src/toastify.js"></script>
+    <script>
+       
+            Toastify({
+                text: "@ViewBag.Message",
+                duration: 3000,
+                gravity: "top",
+                position: 'right',
+                backgroundColor: "#00c851",
+                stopOnFocus: true,
+                style:{
+                    
+                }
+            }).showToast();
+        </script>
+}
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial"/>
+    <script src="~/lib/tinymce/tinymce.min.js"></script>
+    <script src="~/lib/select2-4.0.13/dist/js/select2.min.js"></script>
+    <script src="~/lib/flatpickr/flatpickr.min.js"></script>
+    <script src="~/lib/pqina/pintura/pintura-iife.js"></script>
+    <script src="~/lib/pqina/jquery-pintura/dist/useEditorWithJQuery-iife.js"></script>
+    <!-- filepond -->
+    <script src="~/lib/filepond/filepond.js"></script>
+    <script src="~/lib/filepond-plugin-file-poster/dist/filepond-plugin-file-poster.js"></script>
+    <!-- filepond image editor plugin -->
+    <script src="~/lib/pqina/filepond-plugin-image-editor/dist/FilePondPluginImageEditor.iife.js"></script>
+    <!-- filepond jquery adapter -->
+    <script src="~/lib/jquery-filepond/filepond.jquery.js"></script>
+    <script src="~/js/librarian/book/book.js"></script>
+}

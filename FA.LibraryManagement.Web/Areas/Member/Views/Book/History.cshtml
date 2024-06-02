@@ -1,0 +1,76 @@
+﻿@using System.Security.Claims
+@{
+    ViewData["Title"] = "Borrowing Management";
+    ViewData["SubTitle"] = "List of Borrowings";
+    ViewData["BM"] = "active";
+
+    var status = Context.Request.Query["status"];
+    var borrowing = "text-primary";
+    var borrowed = "text-primary";
+    var all = "text-primary";
+
+    switch (status)
+    {
+        case "borrowing":
+            borrowing = "active text-white bg-primary";
+            break;
+        case "borrowed":
+            borrowed = "active text-white bg-primary";
+            break;
+        default:
+            all = "active text-white bg-primary";
+            break;
+    }
+}
+
+<div class="card shadow border-0 my-4">
+    <div class="card-header bg-primary bg-gradient ms-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">History</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-4">
+        <div class="d-flex justify-content-between pb-3 pt-2">
+            <span></span>
+            <ul class="list-group list-group-horizontal-sm">
+                <li class="list-group-item @borrowing">
+                    <a class="@borrowing" style="text-decoration:none;" asp-controller="Book" asp-action="Index" asp-route-status="borrowing">Borrowing</a>
+                </li>
+                <li class="list-group-item @borrowed">
+                    <a class="@borrowed" style="text-decoration:none;" asp-controller="Book" asp-action="Index" asp-route-status="borrowed">Borrowed</a>
+                </li>
+                <li class="list-group-item @all">
+                    <a class="@all" style="text-decoration:none;" asp-controller="Book" asp-action="Index" asp-route-status="all">All</a>
+                </li>
+            </ul>
+        </div>
+        <div class="table-responsive">
+            <table id="book-history-table" class="table table-bordered table-striped" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Title</th>
+                        <th>ISBN</th>
+                        <th>Author</th>
+                        <th>Borrowed Time</th>
+                        <th>Return Time</th>
+                        <th>Due Time</th>
+                        <th>Fine</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+        // var userId = '@ViewBag.UserId';
+        var userId = '@User.FindFirstValue(ClaimTypes.NameIdentifier)';
+    </script>
+    <script type="module" src="~/js/member/book/list.js"></script>
+}

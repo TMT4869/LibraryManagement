@@ -1,0 +1,177 @@
+﻿@using FA.LibraryManagement.Common.ViewModels
+@model BorrowingVM
+@{
+    ViewData["Title"] = "Borrowing Detail";
+    ViewData["SubTitle"] = "Detailed information about borrowing";
+
+    var statusClass = "";
+    switch (Model.Status)
+    {
+        case "Pending":
+            statusClass = "btn-outline-primary";
+            break;
+        case "Cancelled":
+            statusClass = "btn-outline-danger";
+            break;
+        case "Completed":
+            statusClass = "btn-outline-success";
+            break;
+        case "Incomplete":
+            statusClass = "btn-outline-warning";
+            break;
+        default:
+            statusClass = "btn-outline-secondary";
+            break;
+    }
+}
+
+<form method="post" id="borrowing-form">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <br />
+    <div class="container">
+        <div class="card">
+            <div class="card-header bg-primary text-light ml-0">
+                <div class="container row">
+                    <div class="col-12 d-none d-md-block col-md-6 pb-1">
+                        <span class="fa-fw select-all fas"></span> &nbsp; Summary
+                    </div>
+                    <div class="col-12 col-md-4 offset-md-2 text-right">
+                        <a asp-action="List" class="btn btn-info form-control btn-sm">Back to List</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="container rounded p-2">
+                    <div class="row">
+                        <div class="col-12 col-lg-7 pb-4">
+                            <div class="row">
+                                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="text-primary">Borrowing Details:</span>
+                                </h4>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover table-bordered border">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>ISBN</th>
+                                            <th>Due Time</th>
+                                            <th>Return Time</th>
+                                            <th>Status</th>
+                                            <th>Fine</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.BorrowingDetailsVM)
+                                        {
+                                            <tr>
+                                                <td style="display:none;">@item.Id</td>
+                                                <td>@item.BookVM.Title</td>
+                                                <td>@item.BookVM.ISBN</td>
+                                                <td>@item.DueTime.ToString("dd/MM/yyyy")</td>
+                                                <td>@item.ReturnTime.ToString("dd/MM/yyyy")</td>
+                                                <td>@item.Status</td>
+                                                <td>@item.Fine</td>
+                                                <td>
+                                                    <button class="btn btn-primary btn-sm btn-borrowing-detail">
+                                                        <i class="bi bi-pencil-square"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-4 offset-lg-1">
+                            <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="text-primary">Borrowed Time: @Model.BorrowedTime.ToString("dd/MM/yyyy")</span>
+                            </h4>
+                            <label class="btn @statusClass form-control my-2" id="borrowing-status">
+                                Status - @Model.Status
+                            </label>
+                            <ul class="list-group mb-3">
+
+                                <li class="list-group-item d-flex justify-content-between p-2">
+                                    <div class="row container">
+                                        <div class="col-7">
+                                            <h5 class="my-0 text-primary">@Model.UserVM.FullName</h5>
+                                        </div>
+                                        <div class="col-5 text-end">
+                                            <p class="text-success">@Model.UserVM.PhoneNumber</p>
+                                        </div>
+                                    </div>
+                                </li>
+
+                                <li class="list-group-item bg-primary">
+                                    <div class="row container">
+                                        <div class="col-6">
+                                            <h5 class="text-white">Total Fine</h5>
+                                        </div>
+                                        <div class="col-6 text-end">
+                                            <h5 class="text-white">
+                                                @Model.BorrowingDetailsVM.Sum(item => item.Fine).ToString("c")
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+
+                            @if (Model.Status == "Pending")
+                            {
+                                <button type="button" data-action-url='@Url.Action("Incomplete", "Borrowing")'
+                                        class="btn btn-warning form-control my-1 btn-status">
+                                    Incomplete
+                                </button>
+                                <button type="button" data-action-url='@Url.Action("Cancel", "Borrowing")'
+                                        class="btn btn-danger form-control my-1 btn-status">
+                                    Cancel
+                                </button>
+                            }
+
+                            @if (Model.Status == "Incomplete")
+                            {
+                                <button type="button" data-action-url='@Url.Action("Completed", "Borrowing")'
+                                        class="btn btn-success form-control my-1 btn-status">
+                                    Completed
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="modal fade" id="borrowing-detail" tabindex="-1" aria-labelledby="exampleModalCenterTitle" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">
+                    Borrowing Detail
+                </h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer align-items-center">
+                <button id="btn-update" type="submit" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bx bx-x d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Close</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="module" src="~/js/librarian/borrowing/detail.js"></script>
+}

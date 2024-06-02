@@ -1,0 +1,390 @@
+﻿@model FA.LibraryManagement.Common.ViewModels.DashBoardVM
+@{
+    ViewBag.Title = "Home page";
+    ViewData["home"] = "active";
+}
+
+@section Styles
+{
+    <link rel="stylesheet" href="~/lib/apexcharts/apexcharts.css">
+}
+
+<section class="row">
+<div class="col-12 mb-4">
+    <div class="row">
+        <div class="col-10">
+            <p class="fw-bold">
+                <span id="datetime-now"></span>
+            </p>
+        </div>
+        @*<div class="col-2">
+            <select class="form-control form-select text-center">
+                <option value="today">Today</option>
+                <option value="this-week">This week</option>
+                <option value="this-month">This month</option>
+            </select>
+        </div>*@
+    </div>
+</div> 
+<div class="col-12 col-sm-12 col-lg-12">
+<div class="row">
+    <div class="col-4 col-lg-2 col-md-3">
+        <div class="card">
+            <div class="card-body px-3">
+                <div class="row">
+                    <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5">
+                        <div class="stats-icon green mb-2">
+                            <i class="fa fa-book"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                        <h6 class="text-muted font-semibold">Total Books</h6>
+                        <h6 class="font-extrabold mb-0">@Model.TotalBooks</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-4 col-lg-2 col-md-3">
+        <div class="card">
+            <div class="card-body px-3">
+                <div class="row">
+                    <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5">
+                        <div class="stats-icon blue mb-2">
+                            <i class="fa fa-user"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                        <h6 class="text-muted font-semibold">Total Members</h6>
+                        <h6 class="font-extrabold mb-0">@Model.TotalMembers</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-4 col-lg-2 col-md-3">
+        <div class="card">
+            <div class="card-body px-3">
+                <div class="row">
+                    <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5">
+                        <div class="stats-icon blue mb-2">
+                            <i class="fa fa-money-bill"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                        <h6 class="text-muted font-semibold">Fine</h6>
+                        <h6 class="font-extrabold mb-0 text-nowrap">@Model.TotalFine.ToString("N0") $</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="card">
+        <div class="card-header">
+            <h4>Borrowing Today List</h4>
+        </div>
+        <div class="card-body">
+            <table class="table table-sm table-bordered border text-nowrap">
+                <thead class="align-middle">
+                <tr>
+                    <th>User Name</th>
+                    <th>Number of books</th>
+                    <th>Borrowed Time</th>
+                    <th>Return Time</th>
+                    <th>Due Time</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                @if (Model.BorrowingTodayList != null)
+                {
+                    @foreach (var item in Model.BorrowingTodayList)
+                    {
+                        <tr>
+                            @if (item.ImageUrl != null)
+                            {
+                                <td>
+                                    <img src="@item.ImageUrl" alt="user-image" class="rounded-circle" style="width: 30px; height: 30px;">
+                                    @item.UserName
+                                </td>
+                            }
+                            else
+                            {
+                                switch (item.Gender.ToLower())
+                                {
+                                    case "female":
+                                        <td>
+                                            <img src="~/static/images/faces/1.jpg" alt="user-image" class="rounded-circle" style="width: 30px; height: 30px;">
+                                            @item.UserName
+                                        </td>
+                                        break;
+                                    case "male":
+                                        <td>
+
+                                            <img src="~/static/images/faces/2.jpg" alt="user-image" class="rounded-circle" style="width: 30px; height: 30px;">
+                                            @item.UserName
+
+                                        </td>
+                                        break;
+                                    default:
+                                        <td>
+                                            <img src="~/static/images/faces/3.jpg" alt="user-image" class="rounded-circle" style="width: 30px; height: 30px;">
+                                            @item.UserName
+                                        </td>
+                                        break;
+                                }
+                            }
+                            <td>@item.NumberOfBooks</td>
+                            <td>@item.BorrowedTime.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                @if (item.ReturnTime.ToString("dd/MM/yyyy").Equals("01/01/0001"))
+                                {
+                                    <span class="text-danger">Not yet</span>
+                                }
+                                else
+                                {
+                                    @item.ReturnTime.ToString("dd/MM/yyyy")
+                                }
+                            </td>
+                            <td>
+                                @item.DueTime.ToString("dd/MM/yyyy")
+                            </td>
+                            <td>
+                                <a asp-area="Librarian" asp-controller="Borrowing" asp-action="Detail" asp-route-borrowingId="@item.BorrowingId" class="btn btn-sm btn-primary">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="text-center">No data</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer text-end">
+            <a class="fw-bold" asp-area="Librarian" asp-controller="Borrowing" asp-action="List" asp-route-status="incomplete">See All</a>
+        </div>
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 col-xl-6">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <h4 class="col-9">Total Books Report</h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-9">
+                        <div id="total-books-report"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-8">
+                        <h4>New Members List</h4>
+                    </div>
+                    <div class="col-4 d-flex justify-content-end">
+                        <a asp-area="Librarian" asp-controller="User" asp-action="Create" class="btn btn-sm btn-success">
+                            <i class="bi bi-plus"></i>
+                            New
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered border text-nowrap">
+                        <thead class="align-middle">
+                        <tr>
+                            <th>ID</th>
+                            <th>User Name</th>
+                            <th>Full Name</th>
+                            <th>Phone Number</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @if (Model.UserList != null)
+                        {
+                            @foreach (var item in Model.UserList)
+                            {
+                                <tr>
+                                    <td>@item.Id</td>
+                                    @if (item.ImageUrl != null)
+                                    {
+                                        <td>
+                                            <img src="@item.ImageUrl" alt="user-image" class="rounded-circle" style="width: 30px; height: 30px;">
+                                            @item.UserName
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        switch (item.Gender.ToLower())
+                                        {
+                                            case "female":
+                                                <td>
+                                                    <img src="~/static/images/faces/1.jpg" alt="user-image" class="rounded-circle" style="width: 30px; height: 30px;">
+                                                    @item.UserName
+                                                </td>
+                                                break;
+                                            case "male":
+                                                <td>
+
+                                                    <img src="~/static/images/faces/2.jpg" alt="user-image" class="rounded-circle" style="width: 30px; height: 30px;">
+                                                    @item.UserName
+
+                                                </td>
+                                                break;
+                                            default:
+                                                <td>
+
+                                                    <img src="~/static/images/faces/3.jpg" alt="user-image" class="rounded-circle" style="width: 30px; height: 30px;">
+                                                    @item.UserName
+
+                                                </td>
+                                                break;
+                                        }
+                                    }
+                                    <td>@(item.FirstName + " " + item.LastName)</td>
+                                    <td>@(item.PhoneNumber)</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center">No data</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer text-end">
+                <a class="fw-bold" asp-area="Librarian" asp-controller="User" asp-action="List">See All</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-xl-6">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-8">
+                        <h4>New Books List</h4>
+                    </div>
+                    <div class="col-4 d-flex justify-content-end">
+                        <a asp-area="Librarian" asp-controller="Book" asp-action="Create" class="btn btn-sm btn-success">
+                            <i class="bi bi-plus"></i>
+                            New
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered">
+                        <thead class="align-middle">
+                        <tr>
+                            <th>ISBN</th>
+                            <th>Title</th>
+                            <th>Publisher</th>
+                            <th>Quantity</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @if (Model.BookList != null)
+                        {
+                            @foreach (var item in Model.BookList)
+                            {
+                                <tr>
+                                    <td>
+                                        <a asp-controller="Book" asp-action="Edit" asp-route-bookId="@item.Id" asp-area="Librarian">@item.ISBN</a>
+                                    </td>
+                                    @if (item.BookImages != null)
+                                    {
+                                        <td>
+                                            <div class="d-flex">
+                                                <img src="@item.BookImages.FirstOrDefault().ImageUrl" class="rounded" alt="user-image" width="60px" height="90px">
+                                                <div class="m-2"></div>
+                                                <div>
+                                                    @item.Title
+                                                    <br/> by <span class="fw-bold">@item.BookAuthors.FirstOrDefault().Author.Name</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            <div class="d-flex">
+                                                <img src="~/static/images/book.jpg" class="rounded" alt="user-image" width="50px" height="50px">
+                                                <div class="m-2"></div>
+                                                @item.Title
+                                                by @item.BookAuthors.FirstOrDefault().Author.Name
+                                            </div>
+                                        </td>
+                                    }
+                                    <td>@item.Publisher</td>
+                                    <td>@item.Quantity</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center">No data</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer text-end">
+                <a class="fw-bold" asp-area="Librarian" asp-controller="Book" asp-action="List">See All</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+
+</div>
+</div>
+</section>
+
+@section Scripts
+{
+    <script src="~/lib/moment/moment.js"></script>
+    <script src="~/lib/apexcharts/apexcharts.min.js"></script>
+    <script src="~/js/librarian/dashboard.js"></script>
+}
+
+@*<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row gallery" data-bs-toggle="modal" data-bs-target="#galleryModal">
+                    <div class="col-12">
+                        <img class="w-100" src="~/static/images/samples/library.jpg" alt="Gallery">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>*@

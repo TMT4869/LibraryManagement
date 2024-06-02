@@ -1,0 +1,13 @@
+﻿@model List<FA.LibraryManagement.Common.ViewModels.CategoryVM>
+
+
+@foreach (var category in Model)
+{
+    <a class="h5 fw-semi-bold bg-light rounded py-2 px-3 mb-2"
+       asp-controller="Category"
+       asp-action="Index"
+       asp-route-categoryId="@category.Id"
+       asp-area="Member">
+        <i class="bi bi-arrow-right me-2"></i>@category.Name
+    </a>
+}

@@ -1,0 +1,58 @@
+﻿@page
+@model DeletePersonalDataModel
+@{
+    ViewData["Title"] = "Delete Personal Data";
+    ViewData["SubTitle"] = "This page allows you to delete that data";
+    ViewData["ActivePage"] = ManageNavPages.PersonalData;
+}
+
+<div class="alert alert-warning" role="alert">
+    <p>
+        <i class="bi bi-exclamation-triangle"></i>
+        <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
+    </p>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form id="delete-user" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                    @if (Model.RequirePassword)
+                    {
+                        <div class="form-group my-2">
+                            <label asp-for="Input.Password" class="form-label">Current Password</label>
+                            <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Please enter your password."/>
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </div>
+                    }
+                    <div class="form-check">
+                        <div class="checkbox">
+                            <input type="checkbox" id="iaggree" class="form-check-input">
+                            <label for="iaggree">Touch me! If you agree to delete permanently</label>
+                        </div>
+                    </div>
+                    <div class="form-group my-2 d-flex justify-content-end">
+                        <button type="submit" class="btn btn-danger" id="btn-delete-account" disabled>Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/jquery/jquery.min.js"></script>
+<partial name="_ValidationScriptsPartial" />
+
+<script>
+        $(document).ready(function () {
+            $('#iaggree').change(function () {
+                if (this.checked) {
+                    $('#btn-delete-account').prop('disabled', false);
+                } else {
+                    $('#btn-delete-account').prop('disabled', true);
+                }
+            });
+        });
+    </script>

@@ -1,0 +1,113 @@
+﻿@model FA.LibraryManagement.Common.ViewModels.BookVM
+
+@{
+    ViewData["Title"] = "Book Detail";
+}
+
+<form method="post" asp-controller="Book" asp-action="Detail" asp-route-bookId="@Model.Id">
+    <input hidden asp-for="Id" />
+    <div class="card shadow border-0 mt-4 mb-4">
+        <div class="card-header bg-primary bg-gradient text-light py-4">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h3 class="text-white text-uppercase">@Model.Title</h3>
+                    <p class="text-white fw-semibold mb-0">by @string.Join(", ", Model.AuthorNames)</p>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="py-3">
+                <div class="row">
+                    <div class="col-6 col-md-2 offset-lg-1 pb-1">
+                        <a asp-action="Index" asp-controller="Home" asp-area="Member" class="btn btn-outline-primary bg-gradient mb-5 fw-semibold btn-sm text-uppercase">
+                            <small>Back to home</small>
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-lg-3 offset-lg-1 text-center mb-3">
+                        @if (Model.BookImages != null && Model.BookImages.ToList().Count > 0)
+                        {
+                            <div id="carouselExampleIndicators" class="carousel  slide" data-bs-ride="carousel">
+                                <div class="carousel-indicators">
+
+                                    @foreach (var imageWithIndex in
+                                   Model.BookImages
+                                   .Select((image, index) => new { Image = image, Index = index }))
+                                    {
+                                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="@imageWithIndex.Index"
+                                                class="@(imageWithIndex.Index == 0 ? "active" : "")" aria-current="true" aria-label="Slide 1">
+                                        </button>
+                                    }
+
+
+                                </div>
+                                <div class="carousel-inner">
+                                    @foreach (var imageWithIndex in
+                                   Model.BookImages
+                                   .Select((image, index) => new { Image = image, Index = index }))
+                                    {
+                                        <div class="@(imageWithIndex.Index == 0 ? "carousel-item active" : "carousel-item")">
+                                            <img src="@imageWithIndex.Image.ImageUrl" class="d-block w-100" alt="...">
+                                        </div>
+                                    }
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                        }
+
+                    </div>
+                    <div class="col-12 col-lg-6 offset-lg-1">
+
+                        <div class="col-12 col-md-6 pb-4">
+                            <a asp-controller="Category" asp-action="Index" asp-route-categoryId="@Model.CategoryId"
+                               asp-area="Member" class="badge rounded-pill bg-success">@Model.CategoryName</a>
+                        </div>
+                        <div class="row ps-2">
+                            <h6 class="text-dark text-opacity-50 ">ISBN: @Model.ISBN</h6>
+                        </div>
+                        <div class="row ps-2">
+                            <h6 class="text-dark text-opacity-50 ">Publisher: @Model.Publisher</h6>
+                        </div>
+                        <div class="row ps-2">
+                            <h6 class="text-dark text-opacity-50 ">Published Date: @Model.PublishedDateString</h6>
+                        </div>
+                        <div class="row ps-2">
+                            <h6 class="text-secondary text-opacity-50 fw-bold">Quantity: @Model.Quantity</h6>
+                        </div>
+
+                        <div class="row pl-2 my-3">
+                            <p class="text-black lh-sm">@Html.Raw(Model.Description)</p>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 col-md-6 pb-1">
+                                @if (Model.IsExistCart || Model.Quantity == 0)
+                                {
+                                    <button class="btn btn-primary bg-gradient  w-100 py-2 text-uppercase fw-semibold" disabled>
+                                        Add to Wish List
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button type="submit"
+                                            class="btn btn-primary bg-gradient  w-100 py-2 text-uppercase fw-semibold">
+                                        Add to Wish List
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

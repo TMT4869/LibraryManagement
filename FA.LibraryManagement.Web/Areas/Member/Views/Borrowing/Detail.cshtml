@@ -1,0 +1,121 @@
+﻿@model FA.LibraryManagement.Common.ViewModels.BorrowingVM
+
+@{
+    ViewData["Title"] = "Borrowing";
+
+    var statusClass = "";
+    switch (Model.Status)
+    {
+        case "Pending":
+            statusClass = "btn-outline-primary";
+            break;
+        case "Cancelled":
+            statusClass = "btn-outline-danger";
+            break;
+        case "Completed":
+            statusClass = "btn-outline-success";
+            break;
+        case "Incomplete":
+            statusClass = "btn-outline-warning";
+            break;
+        default:
+            statusClass = "btn-outline-secondary";
+            break;
+    }
+}
+
+<form method="post" id="borrowing-form">
+    <input type="hidden" name="id" value="@Model.Id" />
+
+    <br />
+    <div class="container">
+        <div class="card shadow border-0">
+
+            <div class="card-header bg-primary bg-gradient text-light ml-0 py-4">
+                <div class="row px-4">
+                    <div class="col-6">
+                        <h5 class="pt-2 text-white">
+                            @ViewData["Title"]
+                        </h5>
+                    </div>
+                    <div class="col-6 text-end">
+                        <a asp-action="Index" class="btn btn-warning btn-sm">Back to List</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="container rounded p-2">
+                    <div class="row">
+                        <div class="col-12 col-lg-6 pb-4">
+                            <img src="~/static/images/samples/bg-mountain.jpg" alt="borrow" class="img-fluid" />
+                        </div>
+                        <div class="col-12 col-lg-5 offset-lg-1">
+                            <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="text-info">Borrowing Details:</span>
+                            </h4>
+                            <label class="btn @statusClass my-2 w-100">
+                                Status - @Model.Status
+                            </label>
+                            <ul class="list-group mb-3">
+                                @foreach (var item in Model.BorrowingDetailsVM)
+                                {
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <div>
+                                            <h6 class="my-0">@item.BookVM.Title</h6>
+                                            <small class="text-muted">By @string.Join(", ", item.BookVM.AuthorNames)</small>
+                                        </div>
+                                    </li>
+                                }
+
+                                <li class="list-group-item d-flex justify-content-between bg-light">
+                                    <small class="text-info">Total (Book)</small>
+                                    <strong class="text-info">@Model.BorrowingDetailsVM.Count()</strong>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-12 col-md-8 pt-2">
+                        <p style="color:maroon; font-size:14px;">
+                            Borrowed Time: @Model.BorrowedTime
+                        </p>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        @if (Model.Status == "Pending")
+                        {
+                            <button type="button" data-action-url='@Url.Action("Cancel", "Borrowing")'
+                                    class="btn btn-danger btn-status w-100">
+                                Cancel
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        document.querySelector('.btn-status').addEventListener('click', function (event) {
+            event.preventDefault();
+            Swal.fire({
+                title: "Are you sure?",
+                text: "Please double-check before pressing the button!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('borrowing-form').action = this.dataset.actionUrl;
+                        document.getElementById('borrowing-form').submit();
+                    }
+                });
+        });
+    </script>
+}

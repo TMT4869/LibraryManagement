@@ -1,0 +1,89 @@
+﻿@{
+    ViewData["Title"] = "Borrowing Management";
+    ViewData["SubTitle"] = "List of Borrowings";
+    ViewData["BM"] = "active";
+
+    var status = Context.Request.Query["status"];
+    var pending = "text-primary";
+    var incomplete = "text-primary";
+    var completed = "text-primary";
+    var cancelled = "text-primary";
+    var all = "text-primary";
+
+    switch (status)
+    {
+        case "pending":
+            pending = "active text-white bg-primary";
+            break;
+        case "incomplete":
+            incomplete = "active text-white bg-primary";
+            break;
+        case "completed":
+            completed = "active text-white bg-primary";
+            break;
+        case "cancelled":
+            cancelled = "active text-white bg-primary";
+            break;
+        default:
+            all = "active text-white bg-primary";
+            break;
+    }
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="mt-2"></div>
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-between pb-2 pt-2">
+                    <span></span>
+                    <ul class="list-group list-group-horizontal-sm">
+                        <li class="list-group-item @pending">
+                            <a class="@pending" style="text-decoration:none;" asp-controller="Borrowing" asp-action="List"
+                               asp-route-status="pending">Pending</a>
+                        </li>
+                        <li class="list-group-item @incomplete">
+                            <a class="@incomplete" style="text-decoration:none;" asp-controller="Borrowing" asp-action="List"
+                               asp-route-status="incomplete">Incomplete</a>
+                        </li>
+                        <li class="list-group-item @completed">
+                            <a class="@completed" style="text-decoration:none;" asp-controller="Borrowing" asp-action="List"
+                               asp-route-status="completed">Completed</a>
+                        </li>
+                        <li class="list-group-item @cancelled">
+                            <a class="@cancelled" style="text-decoration:none;" asp-controller="Borrowing" asp-action="List"
+                               asp-route-status="cancelled">Cancelled</a>
+                        </li>
+                        <li class="list-group-item @all">
+                            <a class="@all" style="text-decoration:none;" asp-controller="Borrowing" asp-action="List"
+                               asp-route-status="all">All</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="mt-2"></div>
+                <div class="table-responsive">
+                    <table class="table table-bordered border" id="borrowing-table" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Phone Number</th>
+                                <th>Email</th>
+                                <th>Borrowed Time</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script type="module" src="~/js/librarian/borrowing/list.js"></script>
+}

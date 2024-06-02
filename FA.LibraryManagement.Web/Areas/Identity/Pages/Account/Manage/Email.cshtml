@@ -1,0 +1,52 @@
+﻿@page
+@model EmailModel
+@{
+    ViewData["Title"] = "Manage Email";
+    ViewData["SubTitle"] = "A page where users can manage email";
+    ViewData["ActivePage"] = ManageNavPages.Email;
+    ViewData["ActiveParentNav"] = ManageNavPages.ParentNav;
+}
+
+<partial name="_StatusMessage" for="StatusMessage"/>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form id="email-form" method="post">
+                    <div asp-validation-summary="All" class="text-danger" role="alert"></div>
+                    @if (Model.IsEmailConfirmed)
+                    {
+                        <div class="form-group my-2">
+                            <label asp-for="Email" class="form-label">Current Email</label>
+                            <input asp-for="Email" type="email" class="form-control"
+                                   placeholder="Enter your current email" disabled>
+                            <div class="input-group-append">
+                                <span class="h-100 input-group-text text-success font-weight-bold">✓</span>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-group my-2">
+                            <label asp-for="Email" class="form-label">Current Email</label>
+                            <input asp-for="Email" type="email" class="form-control"
+                                   placeholder="Enter your current email" disabled>
+                            <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail" class="btn btn-link">Send verification email</button>
+                        </div>
+                    }
+                    <div class="form-group my-2">
+                        <label asp-for="Input.NewEmail" class="form-label"></label>
+                        <input asp-for="Input.NewEmail" class="form-control" autocomplete="email" aria-required="true" placeholder="Please enter new email."/>
+                        <span asp-validation-for="Input.NewEmail" class="text-danger"></span>
+                    </div>
+                    <div class="form-group my-2 d-flex justify-content-end">
+                        <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/jquery/jquery.min.js"></script>
+<partial name="_ValidationScriptsPartial" />

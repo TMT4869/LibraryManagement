@@ -1,0 +1,29 @@
+﻿@model FA.LibraryManagement.Common.ViewModels.BorrowingDetailVM
+@{
+    Layout = null;
+}
+
+<form id="update-form" asp-action="UpdateBorrowingDetail" asp-controller="Borrowing" method="post">
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="BorrowingId" />
+    <input type="hidden" asp-for="BookId" />
+    <input type="hidden" asp-for="Fine"/>
+
+    <div class="form-group">
+        <label asp-for="DueTime"></label>
+        <input asp-for="DueTime" type="date" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ReturnTime"></label>
+        <input asp-for="ReturnTime" type="date" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Status"></label>
+        <select class="form-control" id="status-select" asp-for="Status">
+            <option value="Borrowing">Borrowing</option>
+            <option value="Returned">Returned</option>
+        </select>
+    </div>
+</form>

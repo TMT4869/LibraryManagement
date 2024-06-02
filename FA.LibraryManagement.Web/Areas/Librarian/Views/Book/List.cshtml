@@ -1,0 +1,88 @@
+﻿@{
+    ViewData["Title"] = "Book Management";
+    ViewData["HeadingTitle"] = "Book Management";
+    ViewData["HeadingSubTitle"] = "List of Books";
+    ViewData["CM"] = "active";
+    ViewData["book"] = "active";
+}
+
+@section Styles
+{
+    <link rel="stylesheet" href="~/lib/datatables.net-bs5/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="~/lib/sweetalert2/sweetalert2.min.css"/>
+    <link rel="stylesheet" href="~/lib/toastify-js/src/toastify.css"/>
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="mt-2"></div>
+        <div class="row">
+            <div class="col-12">
+                <div class="row justify-content-between">
+                    <div class="col-auto d-flex align-items-center">
+                        <label>Status</label>
+                        <select id="quantity" class="form-select form-select-sm ms-2">
+                            <option value="all">All</option>
+                            <option value="available">Available</option>
+                            <option value="out-of-stock">Out of stock</option>
+                        </select>
+                    </div>
+
+                    <div class="col-auto">
+                        <a asp-area="Librarian" asp-controller="Book" asp-action="Create" class="btn btn-sm btn-success">
+                            <i class="bi bi-plus"></i>
+                            New
+                        </a>
+                    </div>
+                </div>
+
+                <div class="mt-2"></div>
+                <div class="table-responsive">
+                    <table class="table table-bordered border" id="book-table">
+                        <thead class="align-middle">
+                        <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>ISBN</th>
+                            <th>Publisher</th>
+                            <th>Quantity</th>
+                            <th>Category</th>
+                            <th>Published Date</th>
+                            <th>Author</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(ViewBag.Message))
+{
+    <script src="~/lib/toastify-js/src/toastify.js"></script>
+    <script>
+       
+            Toastify({
+                text: "@ViewBag.Message",
+                duration: 3000,
+                gravity: "top",
+                position: 'right',
+                backgroundColor: "#00c851",
+                stopOnFocus: true,
+                style:{
+                    
+                }
+            }).showToast();
+        </script>
+}
+
+@section Scripts
+{
+    <script src="~/lib/sweetalert2/sweetalert2.all.min.js"></script>
+    <script type="module" src="~/js/librarian/book/list.js"></script>
+}

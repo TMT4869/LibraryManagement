@@ -1,0 +1,64 @@
+﻿@model FA.LibraryManagement.Common.ViewModels.AuthorVM
+
+@{
+    ViewData["Title"] = "Author Management";
+    ViewData["HeadingTitle"] = "Author Management";
+    ViewData["HeadingSubTitle"] = "List of Authors";
+    ViewData["CM"] = "active";
+    ViewData["author"] = "active";
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="mt-2"></div>
+        <div class="row">
+            <div class="col-7">
+                <div class="table-responsive">
+                    <table class="table table-bordered border" id="author-table">
+                        <thead class="align-middle">
+                        <tr>
+                            <th>#</th>
+                            <th>Author Name</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-5">
+                <div class="card border">
+                    <div class="card-header">
+                        <h4>Author Form</h4>
+                    </div>
+                    <div class="card-body">
+                        <form class="form-horizontal" id="category-form">
+                            <div class="form-group has-icon-left">
+                                <label for="Name">Author Name</label>
+                                <div class="position-relative">
+                                    <input asp-for="Name" type="text" class="form-control form-control-xl" placeholder="Fill author name here">
+                                    <div class="form-control-icon">
+                                        <i class="bi bi-bookmark"></i>
+                                    </div>
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-12 d-flex justify-content-start">
+                                <button id="btn-submit" type="submit" class="btn btn-primary me-1 mb-1">Create</button>
+                                <button id="btn-reset" type="reset" class="btn btn-light-secondary me-1 mb-1">Reset</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script src="~/js/librarian/author.js"></script>
+}
